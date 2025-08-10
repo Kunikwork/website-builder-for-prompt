@@ -1,0 +1,508 @@
+import React, { useState, useCallback, useEffect } from 'react';
+
+// Main App Component
+const App = () => {
+  // State for editable content
+  const [headerText, setHeaderText] = useState('Conversion Booster');
+  const [subtitleText, setSubtitleText] = useState('Deliver ruthless, tactical, high-clarity CRO audits for any public-facing website');
+  const [step1Text, setStep1Text] = useState('Copy the prompt using the Copy Prompt button');
+  const [step2Text, setStep2Text] = useState('Run it in a reasoning model');
+  const [step3Text, setStep3Text] = useState('Enable feature');
+  const [step4Text, setStep4Text] = useState('Paste your website URL and other requested details');
+  const [promptTitle, setPromptTitle] = useState('Ultimate CRO Analysis Prompt');
+
+  // State for styling
+  const [primaryColor, setPrimaryColor] = useState('#8a2be2');
+  const [secondaryColor, setSecondaryColor] = useState('#ff00ff');
+  const [tertiaryColor, setTertiaryColor] = useState('#4a90e2');
+  const [backgroundColor1, setBackgroundColor1] = useState('#1a1c20');
+  const [backgroundColor2, setBackgroundColor2] = useState('#24262b');
+  const [textColor, setTextColor] = useState('#f5f5f5');
+  const [font, setFont] = useState('Poppins');
+
+  const [generatedHtml, setGeneratedHtml] = useState('');
+
+  const generateHtmlContent = useCallback(() => {
+    const googleFontUrl = `https://fonts.googleapis.com/css2?family=${font.replace(' ', '+')}:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap`;
+    
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${headerText}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="${googleFontUrl}" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: ${primaryColor};
+      --secondary-color: ${secondaryColor};
+      --tertiary-color: ${tertiaryColor};
+      --background-color-1: ${backgroundColor1};
+      --background-color-2: ${backgroundColor2};
+      --text-color: ${textColor};
+      --font-family: '${font}', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, var(--background-color-1), var(--background-color-2));
+      color: var(--text-color);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      padding: 15px;
+      background-attachment: fixed;
+    }
+    .weather-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+    @keyframes rain { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
+    @keyframes snow { 0% { background-position: 0 0; } 100% { background-position: 20px 100px; } }
+    @keyframes wind { 0% { transform: translateX(0); } 100% { transform: translateX(20px); } }
+    .weather-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="100" viewBox="0 0 20 100"><line x1="10" y1="0" x2="10" y2="100" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1"/></svg>'); background-size: 20px 100px; animation: rain 1s linear infinite; opacity: 0.5; }
+    .weather-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="1.5" fill="rgba(200, 200, 255, 0.2)"/></svg>'); background-size: 40px 40px; animation: snow 10s linear infinite; opacity: 0.5; }
+    .weather-wind { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20"><path d="M0,10 Q25,5 50,10 T100,10" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" fill="none"/></svg>'); background-size: 100px 20px; animation: wind 5s linear infinite; opacity: 0.3; }
+    .weather-sunny { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, rgba(251, 191, 36, 0.05) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 20%); opacity: 0.2; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 15px; position: relative; z-index: 10; }
+    header { text-align: center; margin-bottom: 12px; padding: 15px 20px; background: rgba(20, 20, 30, 0.25); border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; animation: fadeIn 0.8s ease-out; transition: all 0.4s ease; }
+    header:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 20px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--tertiary-color), var(--primary-color)) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: destination-out; mask-composite: exclude; z-index: -1; animation: borderAnimation 15s ease infinite; background-size: 300% 300%; }
+    @keyframes borderAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    h1 { font-size: 3.2rem; margin-bottom: 8px; font-weight: 700; background: linear-gradient(90deg, #f5f5f5, #d4d4d4); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    #greeting { font-size: 2.2rem; margin-bottom: 8px; font-weight: 400; color: #d4d4d4; min-height: 2.5rem; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .name-gradient { background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--tertiary-color)); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 600; animation: gradientAnimation 12s ease infinite; background-size: 300% 300%; }
+    @keyframes gradientAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .subtitle { font-size: 1.3rem; max-width: 90%; margin: 0 auto; color: #d4d4d4; font-weight: 300; line-height: 1.6; background: rgba(0, 0, 0, 0.2); padding: 10px 15px; border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    .how-to-use { background: rgba(20, 20, 30, 0.25); border-radius: 20px; padding: 15px; margin-bottom: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); position: relative; animation: slideUp 0.8s ease-out; transition: all 0.4s ease; }
+    .how-to-use:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .how-to-use-title { font-size: 1.5rem; font-weight: 600; color: #f5f5f5; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .how-to-use-title i { color: var(--primary-color); font-size: 1.3rem; }
+    .how-to-use-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
+    .step { background: rgba(10, 10, 20, 0.3); border-radius: 12px; padding: 12px; display: flex; align-items: flex-start; gap: 10px; }
+    .step-number { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+    .step-content { font-size: 0.95rem; line-height: 1.4; }
+    .step-highlight { color: var(--tertiary-color); font-weight: 500; }
+    .ai-model-link { color: var(--primary-color); font-weight: 500; text-decoration: none; cursor: pointer; transition: all 0.3s ease; position: relative; display: inline-block; }
+    .ai-model-link:hover { color: var(--secondary-color); }
+    .ai-model-link:after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); transition: width 0.3s ease; }
+    .ai-model-link:hover:after { width: 100%; }
+    .copy-feedback { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(45deg, #4CAF50, #2E7D32); color: white; padding: 12px 20px; border-radius: 50px; font-weight: 500; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); z-index: 1000; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
+    .copy-feedback.show { transform: translateY(0); opacity: 1; }
+    .prompt-container { background: rgba(20, 20, 30, 0.25); border-radius: 20px; padding: 15px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); position: relative; margin-bottom: 15px; animation: slideUp 0.8s ease-out; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1), height 0.6s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1); max-height: 350px; display: flex; flex-direction: column; }
+    .prompt-container:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+    .prompt-container.expanded { max-height: calc(100vh - 100px) !important; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    .prompt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .prompt-title { font-size: 1.8rem; font-weight: 600; color: #f5f5f5; display: flex; align-items: center; gap: 12px; }
+    .prompt-title i { color: var(--primary-color); font-size: 1.5rem; }
+    #copy-button { background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--tertiary-color)); background-size: 300% 300%; color: white; border: none; padding: 10px 20px; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); position: relative; overflow: hidden; animation: gradientAnimation 12s ease infinite; }
+    #copy-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); }
+    #copy-button:active { transform: translateY(1px); }
+    #copy-button.copied { background: linear-gradient(45deg, #4CAF50, #2E7D32); box-shadow: 0 6px 20px rgba(46, 125, 50, 0.3); animation: none; }
+    #copy-button.copied::after { content: 'Copied!'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(46, 125, 50, 0.9); }
+    #prompt-text { background: rgba(10, 10, 20, 0.3); border-radius: 16px; padding: 15px; max-height: 280px; overflow-y: auto; font-family: 'Source Code Pro', monospace; font-size: 1.05rem; line-height: 1.6; color: #f0f0f0; border: 1px solid rgba(255, 255, 255, 0.05); white-space: pre-wrap; backdrop-filter: blur(5px); flex: 1; }
+    #prompt-text::-webkit-scrollbar { width: 10px; }
+    #prompt-text::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+    #prompt-text::-webkit-scrollbar-thumb { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--tertiary-color)); border-radius: 10px; background-size: 300% 300%; animation: gradientAnimation 12s ease infinite; }
+    .prompt-section { color: var(--primary-color); font-weight: 600; margin-top: 15px; margin-bottom: 8px; display: block; }
+    .prompt-subsection { color: var(--secondary-color); font-weight: 500; margin-top: 12px; margin-bottom: 4px; display: block; }
+    .prompt-highlight { color: var(--tertiary-color); font-weight: 500; }
+    .prompt-example { background: rgba(255, 255, 255, 0.05); padding: 8px 12px; border-radius: 8px; margin: 8px 0; display: block; border-left: 3px solid var(--primary-color); }
+    .prompt-important { color: #ff6b6b; font-weight: 600; }
+    .audit-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95rem; }
+    .audit-table th, .audit-table td { border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px; text-align: left; }
+    .audit-table th { background-color: rgba(138, 43, 226, 0.2); color: #f0f0f0; font-weight: 600; }
+    .audit-table tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.05); }
+    .audit-table tr:hover { background-color: rgba(138, 43, 226, 0.1); }
+    .loader { display: inline-block; margin-left: 10px; }
+    .loader::after { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #f5f5f5; border-color: #f5f5f5 transparent #f5f5f5 transparent; animation: loader 1.2s linear infinite; }
+    @keyframes loader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @media (max-width: 768px) { .how-to-use-steps { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="weather-animation">
+    <div class="weather-rain"></div><div class="weather-snow"></div><div class="weather-wind"></div><div class="weather-sunny"></div>
+  </div>
+  <div class="container">
+    <header>
+      <h1>${headerText}</h1>
+      <div id="greeting">Hello<span class="loader"></span></div>
+      <p class="subtitle">${subtitleText}</p>
+    </header>
+    <div class="how-to-use">
+      <h2 class="how-to-use-title"><i class="fas fa-lightbulb"></i> How to Use This Prompt</h2>
+      <div class="how-to-use-steps">
+        <div class="step"><div class="step-number">1</div><div class="step-content">${step1Text}</div></div>
+        <div class="step"><div class="step-number">2</div><div class="step-content">${step2Text} (<span id="ai-model" class="ai-model-link"></span>)</div></div>
+        <div class="step"><div class="step-number">3</div><div class="step-content">${step3Text} <span id="ai-mode" class="step-highlight"></span></div></div>
+        <div class="step"><div class="step-number">4</div><div class="step-content">${step4Text}</div></div>
+      </div>
+    </div>
+    <main>
+      <div class="prompt-container" id="prompt-container">
+        <div class="prompt-header">
+          <h2 class="prompt-title"><i class="fas fa-chart-line"></i> ${promptTitle}</h2>
+          <button id="copy-button"><i class="fas fa-copy"></i> Copy Prompt</button>
+        </div>
+        <pre id="prompt-text"></pre>
+      </div>
+    </main>
+  </div>
+  <div id="copy-feedback" class="copy-feedback"><i class="fas fa-check-circle"></i> Copied to clipboard!</div>
+  <script>
+    const aiModels = [ { name: 'Z.ai', mode: 'Auto Think + Web Search', url: 'https://chat.z.ai/', priority: 1 }, { name: 'ChatGPT O Version', mode: 'Think Longer Or Deep Research', url: 'https://chatgpt.com/', priority: 1 }, { name: 'Perplexity', mode: '', url: 'https://www.perplexity.ai/', priority: 1 }, { name: 'Gemini Pro Version', mode: '', url: 'https://gemini.google.com/app', priority: 1 }, { name: 'Gemini Flash Version', mode: 'Deep Research', url: 'https://gemini.google.com/app', priority: 2 }, { name: 'Claud', mode: 'Extended Thinking', url: 'https://claude.ai/new', priority: 2 }, { name: 'DeepSeek', mode: 'DeepThink + Search', url: 'https://chat.deepseek.com/', priority: 2 }, { name: 'Qwen', mode: 'Thinking + Search', url: 'https://chat.qwen.ai/', priority: 2 } ];
+    function getQueryParam(key) { return new URLSearchParams(window.location.search).get(key); }
+    function getGreeting(hour) { if (hour >= 5 && hour < 12) return "Good Morning"; if (hour >= 12 && hour < 17) return "Good Afternoon"; if (hour >= 17 && hour < 22) return "Good Evening"; return "Hello"; }
+    async function typeWriter(element, text, speed = 120) { element.textContent = ""; for (let i = 0; i < text.length; i++) { element.textContent += text.charAt(i); await new Promise(resolve => setTimeout(resolve, speed)); } }
+    function showCopyFeedback() { const feedback = document.getElementById('copy-feedback'); feedback.classList.add('show'); setTimeout(() => { feedback.classList.remove('show'); }, 2000); }
+    function formatPromptText() {
+        const promptText = document.getElementById('prompt-text');
+        let content = \`<span class="prompt-section">CONVERSION BOOSTER - ULTIMATE CRO ANALYSIS PROMPT</span>
+<span class="prompt-subsection">INITIAL USER REQUEST CHECK</span>
+First, check if the user has provided a website URL in their message. 
+- If the user has not provided a website URL, respond ONLY with: "To begin your comprehensive CRO analysis, please provide the following details: Required: Website URL: Optional: Primary conversion goal: (e.g., sales, leads, signups) Target audience: (e.g., demographics, industry) Current conversion metrics: (e.g., conversion rate %, bounce rate) Specific concerns or challenges: Point me to your website and let's dig in. Goals or numbers? Throw them in if you've got them. The more I know, the deeper I go." Then STOP. Do not proceed with any analysis.
+- If the user has provided a website URL (with or without optional details), immediately proceed with all phases of the CRO analysis. Do not repeatedly request optional details if the user chooses not to provide them. Optional fields may be used if provided, but their absence must not block or delay the analysis.
+<span class="prompt-subsection">MANDATORY EXECUTION RULES:</span>
+- Once a website URL is provided, immediately initiate the CRO analysis sequence.
+- Execute ALL phases (1 through 8) in numerical order without stopping, skipping, or asking for additional input unless required to clarify ambiguous site elements.
+- Treat each phase as mandatory. No phases may be skipped for lack of optional information, simulate missing data where necessary.
+- Produce outputs for every required table, section, and score, even if based on inferred or simulated research.
+- Do not pause for confirmation between phases; the analysis must proceed continuously from start to finish in one uninterrupted response.
+- Use placeholder or simulated metrics where the user has not provided specific data, but label them clearly as simulated or estimated.
+- DEFAULT BEHAVIOR: Perform a comprehensive audit of the ENTIRE WEBSITE, not just the provided URL. Crawl and analyze all accessible pages including homepage, product/service pages, about, contact, blog, etc.
+- EXCEPTION: Only audit specific URLs if the user EXPLICITLY states to limit the audit to certain pages/URLs.
+- Do not ask the user whether they want a full website audit or specific page audit - full website audit is the default.
+- For website types that typically have checkout/lead forms but are missing them, include recommendations to implement these features if appropriate for the business model.
+<span class="prompt-subsection">CORE IDENTITY</span>
+You are Conversion Booster - an elite conversion rate optimization specialist that delivers ruthless, tactical, high-clarity audits for any public-facing website. Mobile-first. E-commerce optimized. ZERO skips. ZERO filler.
+<span class="prompt-section">EXECUTION PROTOCOL</span>
+<span class="prompt-subsection">PHASE 1: INTAKE & RESEARCH SIMULATION</span>
+<span class="prompt-highlight">Process:</span>
+1. <span class="prompt-highlight">Website Analysis:</span>
+   - Load and analyze the provided URL as the entry point
+   - Crawl and analyze the ENTIRE WEBSITE (all accessible pages)
+   - Detect tech stack (Shopify, WooCommerce, etc.)
+   - Identify page types and conversion paths across the entire site
+   - Evaluate mobile responsiveness across multiple page types
+   - Identify if this is an e-commerce, B2B, lead gen, SaaS, service, or publisher site
+2. <span class="prompt-highlight">Deep Research Simulation:</span>
+   - Analyze 5 competitor site UX flows
+   - Review 3 recent industry forums/Reddit threads
+   - Research current year design best practices
+   - Simulate review sentiment from Trustpilot, Google, etc.
+   - Apply tactical UX psychology principles
+3. <span class="prompt-highlight">Auto-Detection:</span>
+   - Country/target market from site content
+   - Primary goal (sales, leads, calls) from CTAs and page structure
+   - 10-15 competitors from public data
+   - Tech stack and integrations
+   - Identify missing conversion elements typical for this business type
+<span class="prompt-subsection">PHASE 2: COMPREHENSIVE AUDIT FRAMEWORK</span>
+<span class="prompt-highlight">AUDIT GRID FORMAT (USE FOR ALL SECTIONS)</span>
+<table class="audit-table">
+  <tr>
+    <th>Section</th>
+    <th>⭐ Score</th>
+    <th>What's There</th>
+    <th>What's Not Working</th>
+    <th>How to Fix It</th>
+    <th>Priority</th>
+  </tr>
+  <tr>
+    <td colspan="6">[Content will be dynamically generated based on analysis]</td>
+  </tr>
+</table>
+<span class="prompt-important">VAGUE FIX BLOCKER:</span> Each "How to Fix It" must include:
+- A/B test structure
+- Example site doing it right
+- Specific microcopy or design element
+- CRO principle (anchoring, contrast bias, etc.)
+<span class="prompt-highlight">SECTION-BY-SECTION ANALYSIS (ALL REQUIRED)</span>
+<span class="prompt-subsection">🚀 Homepage Header</span>
+- Above-the-fold elements
+- Value proposition clarity
+- Primary CTA visibility
+- Navigation structure
+- Trust signals placement
+<span class="prompt-subsection">🧭 Navigation</span>
+- Menu structure and organization
+- Mobile hamburger menu
+- Search functionality
+- Category hierarchy
+- User flow efficiency
+<span class="prompt-subsection">🛍️ Product/Service Listings</span>
+- Grid/list view options
+- Filtering capabilities
+- Sorting options
+- Product card information
+- Quick view functionality
+<span class="prompt-subsection">🔎 On-site Search</span>
+- Search bar visibility
+- Autocomplete functionality
+- Search results relevance
+- Filters in search results
+- "No results" handling
+<span class="prompt-subsection">📱 Mobile UX</span>
+- Touch-friendly interface
+- Page load speed
+- Image optimization
+- Form field sizes
+- Checkout flow
+<span class="prompt-subsection">🧾 Checkout/Purchase Process (ANALYZE IF PRESENT, RECOMMEND IF ABSENT FOR E-COMMERCE)</span>
+- Steps and progress indicator
+- Form fields and validation
+- Payment options
+- Guest checkout
+- Error handling
+- Note: If this is an e-commerce site without checkout functionality, strongly recommend implementation
+<span class="prompt-subsection">🛠️ Lead Generation (ANALYZE IF PRESENT, RECOMMEND IF ABSENT FOR B2B/LEAD GEN SITES)</span>
+- Form placement and visibility
+- Field requirements
+- Value proposition
+- Submit button design
+- Thank you page
+- Note: If this is a B2B or lead generation site without lead forms, strongly recommend implementation
+<span class="prompt-subsection">🔐 Trust Signals</span>
+- Social proof placement
+- Security badges
+- Return policy visibility
+- Contact information
+- Professional design
+<span class="prompt-subsection">🧲 Urgency & Scarcity Tactics</span>
+- Stock indicators
+- Countdown timers
+- Limited-time offers
+- Social proof of popularity
+- Exclusivity messaging
+<span class="prompt-subsection">👤 About Page</span>
+- Company story
+- Team information
+- Value proposition
+- Trust building elements
+- Differentiation factors
+<span class="prompt-subsection">📬 Contact Page</span>
+- Contact form
+- Business hours
+- Location/map
+- Contact methods
+- Response time expectations
+<span class="prompt-subsection">💡 Content & Copy</span>
+- Headline effectiveness
+- Benefit-focused language
+- Scannability
+- Readability
+- Emotional triggers
+<span class="prompt-subsection">🎨 Design & Visual Elements</span>
+- Visual hierarchy
+- Color scheme
+- Typography
+- Imagery quality
+- Whitespace usage
+<span class="prompt-subsection">⚡ Performance & Technical</span>
+- Page load speed
+- Mobile responsiveness
+- Browser compatibility
+- Technical SEO
+- Tracking implementation
+<span class="prompt-subsection">🔄 Customer Journey Analysis</span>
+- Entry points
+- User flow paths
+- Drop-off points
+- Conversion barriers
+- Post-conversion experience
+<span class="prompt-subsection">🎯 Personalization Elements</span>
+- Dynamic content
+- Recommendation engines
+- User-specific messaging
+- Behavioral targeting
+- Customized experiences
+<span class="prompt-subsection">📊 Data & Analytics Implementation</span>
+- Event tracking
+- Conversion funnel setup
+- User segmentation
+- Goal configuration
+- Attribution modeling
+<span class="prompt-subsection">🔍 Advanced SEO Integration</span>
+- Content optimization
+- Structured data
+- Internal linking
+- Page experience signals
+- Local SEO elements
+<span class="prompt-subsection">🌐 International & Localization</span>
+- Multi-language support
+- Currency display
+- Regional pricing
+- Cultural adaptation
+- Local payment methods
+<span class="prompt-subsection">♿ Accessibility Compliance</span>
+- WCAG adherence
+- Screen reader compatibility
+- Keyboard navigation
+- Color contrast
+- Alternative text
+<span class="prompt-subsection">🤖 AI & Automation Integration</span>
+- Chatbot effectiveness
+- Aut\`;
+        promptText.innerHTML = content;
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const greetingEl = document.getElementById('greeting');
+      const name = getQueryParam('name') || 'there';
+      const hour = new Date().getHours();
+      const greetingText = getGreeting(hour);
+      greetingEl.innerHTML = \`\${greetingText}, <span class="name-gradient">\${name}</span>\`;
+      const copyButton = document.getElementById('copy-button');
+      const promptContainer = document.getElementById('prompt-container');
+      formatPromptText();
+      const promptTextToCopy = document.getElementById('prompt-text').innerText;
+      copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(promptTextToCopy).then(() => {
+          copyButton.classList.add('copied');
+          copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          showCopyFeedback();
+          setTimeout(() => {
+            copyButton.classList.remove('copied');
+            copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy Prompt';
+          }, 2000);
+        });
+      });
+      promptContainer.addEventListener('click', (e) => {
+        if (!e.target.closest('#copy-button')) {
+          promptContainer.classList.toggle('expanded');
+        }
+      });
+      const aiModelEl = document.getElementById('ai-model');
+      const aiModeEl = document.getElementById('ai-mode');
+      const priority1Models = aiModels.filter(m => m.priority === 1);
+      const randomModel = priority1Models[Math.floor(Math.random() * priority1Models.length)];
+      aiModelEl.textContent = randomModel.name;
+      aiModelEl.href = randomModel.url;
+      aiModelEl.target = '_blank';
+      aiModeEl.textContent = randomModel.mode;
+    });
+  </script>
+</body>
+</html>`;
+  }, [headerText, subtitleText, step1Text, step2Text, step3Text, step4Text, promptTitle, primaryColor, secondaryColor, tertiaryColor, backgroundColor1, backgroundColor2, textColor, font]);
+
+  useEffect(() => {
+    setGeneratedHtml(generateHtmlContent());
+  }, [generateHtmlContent]);
+
+  const handleGenerateAndDownload = () => {
+    const htmlContent = generateHtmlContent();
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'index.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handlePreview = () => {
+    const htmlContent = generateHtmlContent();
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+  };
+
+  const fonts = ['Poppins', 'Roboto', 'Lato', 'Montserrat', 'Oswald', 'Raleway', 'Merriweather'];
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', fontFamily: 'sans-serif', backgroundColor: '#f0f2f5' }}>
+      {/* Editor Panel */}
+      <div style={{ width: '350px', padding: '20px', overflowY: 'auto', backgroundColor: 'white', borderRight: '1px solid #ddd' }}>
+        <h2 style={{ marginBottom: '20px', fontSize: '1.5rem', color: '#333' }}>Website Builder</h2>
+
+        {/* Text Content Section */}
+        <div style={{ marginBottom: '20px' }}>
+          <h3 style={{ marginBottom: '10px', fontSize: '1.1rem', color: '#555', borderBottom: '1px solid #eee', paddingBottom: '5px' }}>Content</h3>
+          <label style={{ display: 'block', marginBottom: '10px' }}>
+            <span style={{fontWeight: 'bold'}}>Header Title:</span>
+            <input type="text" value={headerText} onChange={(e) => setHeaderText(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+          </label>
+          <label style={{ display: 'block', marginBottom: '10px' }}>
+            <span style={{fontWeight: 'bold'}}>Subtitle:</span>
+            <textarea value={subtitleText} onChange={(e) => setSubtitleText(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc', minHeight: '80px' }} />
+          </label>
+           <label style={{ display: 'block', marginBottom: '10px' }}>
+            <span style={{fontWeight: 'bold'}}>Prompt Title:</span>
+            <input type="text" value={promptTitle} onChange={(e) => setPromptTitle(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+          </label>
+        </div>
+
+        {/* How to Use Section */}
+        <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ marginBottom: '10px', fontSize: '1.1rem', color: '#555', borderBottom: '1px solid #eee', paddingBottom: '5px' }}>'How To Use' Steps</h3>
+             <label style={{ display: 'block', marginBottom: '10px' }}>
+                <span style={{fontWeight: 'bold'}}>Step 1:</span>
+                <input type="text" value={step1Text} onChange={(e) => setStep1Text(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+            </label>
+             <label style={{ display: 'block', marginBottom: '10px' }}>
+                <span style={{fontWeight: 'bold'}}>Step 2:</span>
+                <input type="text" value={step2Text} onChange={(e) => setStep2Text(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+            </label>
+             <label style={{ display: 'block', marginBottom: '10px' }}>
+                <span style={{fontWeight: 'bold'}}>Step 3:</span>
+                <input type="text" value={step3Text} onChange={(e) => setStep3Text(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+            </label>
+             <label style={{ display: 'block', marginBottom: '10px' }}>
+                <span style={{fontWeight: 'bold'}}>Step 4:</span>
+                <input type="text" value={step4Text} onChange={(e) => setStep4Text(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+            </label>
+        </div>
+
+        {/* Styling Section */}
+        <div style={{ marginBottom: '20px' }}>
+          <h3 style={{ marginBottom: '10px', fontSize: '1.1rem', color: '#555', borderBottom: '1px solid #eee', paddingBottom: '5px' }}>Styling</h3>
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
+            <label>Primary <input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} style={{ width: '100%' }} /></label>
+            <label>Secondary <input type="color" value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} style={{ width: '100%' }} /></label>
+            <label>Tertiary <input type="color" value={tertiaryColor} onChange={(e) => setTertiaryColor(e.target.value)} style={{ width: '100%' }} /></label>
+            <label>Text <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} style={{ width: '100%' }} /></label>
+            <label>BG 1 <input type="color" value={backgroundColor1} onChange={(e) => setBackgroundColor1(e.target.value)} style={{ width: '100%' }} /></label>
+            <label>BG 2 <input type="color" value={backgroundColor2} onChange={(e) => setBackgroundColor2(e.target.value)} style={{ width: '100%' }} /></label>
+          </div>
+        </div>
+        
+        {/* Font Selection */}
+        <div style={{ marginBottom: '30px' }}>
+            <h3 style={{ marginBottom: '10px', fontSize: '1.1rem', color: '#555', borderBottom: '1px solid #eee', paddingBottom: '5px' }}>Typography</h3>
+            <label>
+                <span style={{fontWeight: 'bold'}}>Font Family:</span>
+                <select value={font} onChange={(e) => setFont(e.target.value)} style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ccc' }}>
+                    {fonts.map(f => <option key={f} value={f}>{f}</option>)}
+                </select>
+            </label>
+        </div>
+
+        {/* Action Buttons */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button onClick={handleGenerateAndDownload} style={{ padding: '12px', fontSize: '1rem', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                <i className="fas fa-download" style={{marginRight: '8px'}}></i>Generate & Download HTML
+            </button>
+            <button onClick={handlePreview} style={{ padding: '12px', fontSize: '1rem', backgroundColor: '#2196F3', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                <i className="fas fa-eye" style={{marginRight: '8px'}}></i>Preview in New Tab
+            </button>
+        </div>
+      </div>
+
+      {/* Preview Panel */}
+      <div style={{ flex: 1, height: '100%', overflow: 'hidden', backgroundColor: '#fff' }}>
+        <iframe
+          srcDoc={generatedHtml}
+          title="Live Preview"
+          style={{ width: '100%', height: '100%', border: 'none' }}
+          sandbox="allow-scripts allow-same-origin"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default App;
